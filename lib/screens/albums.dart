@@ -2,13 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_api/models/album.dart';
 import 'package:flutter_api/webapis/services.dart';
 
-class Albums extends StatelessWidget {
+class Albums extends StatefulWidget {
+  @override
+  _AlbumState createState() => _AlbumState();
+}
+
+class _AlbumState extends State<Albums> {
+
+  Future<List<Album>> albums;
+
+  @override
+  void initState(){
+    super.initState();
+    albums = getAlbums();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text("Albums")),
         body: FutureBuilder(
-            future: getAlbums(),
+            future: albums,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<Album> albums = snapshot.data;
@@ -27,9 +41,21 @@ class Albums extends StatelessWidget {
   }
 
   _itemBuilder(Album album, BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(5.0),
-        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
-        child: Text('${album.title}', style: TextStyle(fontSize: 20)));
+    return ListTile(
+        title: Text('${album.title}'),
+        subtitle: Text('Click to see Photos'),
+        onTap: () {
+          final snackBar = SnackBar(
+            content: Text(album.title),
+            action: SnackBarAction(
+              label: 'Close',
+              onPressed: () {
+                // Some code to undo the change.
+              },
+            ),
+          );
+
+          Scaffold.of(context).showSnackBar(snackBar);
+        });
   }
 }
