@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_api/main.dart';
 import 'package:flutter_api/models/album.dart';
 import 'package:flutter_api/webapis/services.dart';
 
@@ -8,11 +9,10 @@ class Albums extends StatefulWidget {
 }
 
 class _AlbumState extends State<Albums> {
-
   Future<List<Album>> albums;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     albums = getAlbums();
   }
@@ -44,18 +44,10 @@ class _AlbumState extends State<Albums> {
     return ListTile(
         title: Text('${album.title}'),
         subtitle: Text('Click to see Photos'),
-        onTap: () {
-          final snackBar = SnackBar(
-            content: Text(album.title),
-            action: SnackBarAction(
-              label: 'Close',
-              onPressed: () {
-                // Some code to undo the change.
-              },
-            ),
-          );
+        onTap: () => _onAlbumTap(context, album.id));
+  }
 
-          Scaffold.of(context).showSnackBar(snackBar);
-        });
+  _onAlbumTap(BuildContext context, int albumId) {
+    Navigator.pushNamed(context, PhotosRoute, arguments: {"albumId" : albumId});
   }
 }
