@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_api/models/photo.dart';
 import 'package:flutter_api/webapis/services.dart';
+import 'package:flutter_api/main.dart';
 
 class Photos extends StatefulWidget {
   final int albumId;
@@ -44,13 +45,20 @@ class _PhotoState extends State<Photos> {
       gridDelegate:
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
       itemBuilder: (BuildContext build, int index) {
-        return Card(
-          margin: EdgeInsets.all(4),
-          child: CachedNetworkImage(
-              imageUrl: photos[index].thumbnailUrl,
-              placeholder: (context, url) => CircularProgressIndicator()),
+        return InkWell(
+          onTap: ()=> _onPhotoTap(context ,photos[index].url),
+          child: Card(
+            margin: EdgeInsets.all(4),
+            child: CachedNetworkImage(
+                imageUrl: photos[index].thumbnailUrl,
+                placeholder: (context, url) => Center(child: CircularProgressIndicator())),
+          ),
         );
       },
     );
+  }
+
+  _onPhotoTap(BuildContext context, String url) {
+    Navigator.pushNamed(context, FullScreenPhotoRoute, arguments: {"url" : url});
   }
 }

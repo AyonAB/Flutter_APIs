@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api/screens/albums.dart';
+import 'package:flutter_api/screens/full_screen_photo.dart';
 import 'package:flutter_api/screens/photos.dart';
 
 void main() => runApp(FlutterApi());
 
 const AlbumsRoute = '/';
 const PhotosRoute = '/photos';
+const FullScreenPhotoRoute = '/photo';
 
 class FlutterApi extends StatelessWidget {
   @override
@@ -32,6 +34,9 @@ class FlutterApi extends StatelessWidget {
           break;
         case PhotosRoute:
           screen = Photos(args['albumId']);
+          break;
+        case FullScreenPhotoRoute:
+          screen = FullScreenPhoto(args['url']);
           break;
         default:
           break;
