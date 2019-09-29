@@ -43,7 +43,10 @@ class _AlbumState extends State<Albums> {
                 } else if (snapshot.hasError) {
                   return SingleChildScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      child: Center(child: Text("Error Gettings Albums!")));
+                      child: Container(
+                          height: MediaQuery.of(context).size.height,
+                          child:
+                              Center(child: Text("Error Gettings Albums!"))));
                 }
                 return Center(child: CircularProgressIndicator());
               }),
