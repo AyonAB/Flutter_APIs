@@ -49,6 +49,7 @@ class _PhotoState extends State<Photos> {
           onTap: ()=> _onPhotoTap(context ,photos[index].url),
           child: Card(
             margin: EdgeInsets.all(4),
+            elevation: 5.0,
             child: CachedNetworkImage(
                 imageUrl: photos[index].thumbnailUrl,
                 placeholder: (context, url) => Center(child: CircularProgressIndicator())),

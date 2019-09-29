@@ -12,6 +12,10 @@ class Album {
 }
 
 List<Album> albumFromJson(String str) {
-  var jsonData = json.decode(str) as List;
-  return jsonData.map((album) => Album.fromJson(album)).toList();
+  if (str != null) {
+    var jsonData = json.decode(str) as List;
+    return jsonData.map((album) => Album.fromJson(album)).toList();
+  } else {
+    return null;
+  }
 }

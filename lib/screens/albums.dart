@@ -11,6 +11,9 @@ class Albums extends StatefulWidget {
 class _AlbumState extends State<Albums> {
   Future<List<Album>> albums;
 
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
+
   @override
   void initState() {
     super.initState();
@@ -21,23 +24,37 @@ class _AlbumState extends State<Albums> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text("Albums")),
-        body: FutureBuilder(
-            future: albums,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                List<Album> albums = snapshot.data;
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return ListView.builder(
-                    itemCount: albums.length,
-                    itemBuilder: (context, index) =>
-                        _itemBuilder(albums[index], context),
-                  );
+        body: RefreshIndicator(
+          key: _refreshIndicatorKey,
+          onRefresh: _refresh,
+          child: FutureBuilder<List<Album>>(
+              future: albums,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  List<Album> albums = snapshot.data;
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: albums.length,
+                      itemBuilder: (context, index) =>
+                          _itemBuilder(albums[index], context),
+                    );
+                  }
+                } else if (snapshot.hasError) {
+                  return SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Center(child: Text("Error Gettings Albums!")));
                 }
-              } else if (snapshot.hasError) {
-                return Center(child: Text("Error Gettings Albums!"));
-              }
-              return Center(child: CircularProgressIndicator());
-            }));
+                return Center(child: CircularProgressIndicator());
+              }),
+        ));
+  }
+
+  Future<Null> _refresh() async {
+    setState(() {
+      albums = getAlbums();
+    });
+    return null;
   }
 
   _itemBuilder(Album album, BuildContext context) {
@@ -48,6 +65,6 @@ class _AlbumState extends State<Albums> {
   }
 
   _onAlbumTap(BuildContext context, int albumId) {
-    Navigator.pushNamed(context, PhotosRoute, arguments: {"albumId" : albumId});
+    Navigator.pushNamed(context, PhotosRoute, arguments: {"albumId": albumId});
   }
 }

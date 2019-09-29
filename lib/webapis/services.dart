@@ -9,7 +9,7 @@ Future<List<Album>> getAlbums() async {
   if (response.statusCode == 200) {
     return albumFromJson(response.body);
   } else {
-    throw Exception('Failed to load Albums');
+    throw Exception('Failed to fetch Albums');
   }
 }
 
